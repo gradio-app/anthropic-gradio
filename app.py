@@ -1,7 +1,7 @@
 import gradio as gr
-import openai_gradio
+import anthropic_gradio
 
 gr.load(
-    name='gpt-4-turbo',
-    src=openai_gradio.registry,
+    name='claude-3-opus-20240229',
+    src=anthropic_gradio.registry,
 ).launch()

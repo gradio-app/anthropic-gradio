@@ -3,9 +3,9 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "openai-gradio"
+name = "anthropic-gradio"
 version = "0.1.0"
-description = "A Python package for creating Gradio applications with OpenAI models"
+description = "A Python package for creating Gradio applications with Anthropic models"
 authors = [
     { name = "Your Name", email = "your.email@example.com" }
 ]
@@ -18,16 +18,16 @@ classifiers = [
 ]
 dependencies = [
     "gradio",
-    "openai",
+    "anthropic",
 ]
 
 [project.urls]
-homepage = "https://github.com/your-username/openai-gradio"
-repository = "https://github.com/your-username/openai-gradio"
+homepage = "https://github.com/your-username/anthropic-gradio"
+repository = "https://github.com/your-username/anthropic-gradio"
 
 [project.optional-dependencies]
 dev = ["pytest"]
 
 [tool.hatch.build.targets.wheel]
-packages = ["openai_gradio"]
+packages = ["anthropic_gradio"]
 

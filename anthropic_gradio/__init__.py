@@ -1,5 +1,5 @@
 import os
-from openai import OpenAI
+from anthropic import Anthropic
 import gradio as gr
 from typing import Callable
 
@@ -9,17 +9,17 @@ __version__ = "0.0.1"
 def get_fn(model_name: str, preprocess: Callable, postprocess: Callable, api_key: str):
     def fn(message, history):
         inputs = preprocess(message, history)
-        client = OpenAI(api_key=api_key)
-        completion = client.chat.completions.create(
+        client = Anthropic(api_key=api_key)
+        with client.messages.stream(
             model=model_name,
             messages=inputs["messages"],
-            stream=True,
-        )
-        response_text = ""
-        for chunk in completion:
-            delta = chunk.choices[0].delta.content or ""
-            response_text += delta
-            yield postprocess(response_text)
+            max_tokens=1000,
+        ) as stream:
+            response_text = ""
+            for chunk in stream:
+                delta = chunk.delta.text or ""
+                response_text += delta
+                yield postprocess(response_text)
 
     return fn
 
@@ -52,15 +52,15 @@ def get_pipeline(model_name):
 
 def registry(name: str, token: str | None = None, **kwargs):
     """
-    Create a Gradio Interface for a model on OpenAI.
+    Create a Gradio Interface for a model on Anthropic.
 
     Parameters:
-        - name (str): The name of the OpenAI model.
-        - token (str, optional): The API key for OpenAI.
+        - name (str): The name of the Anthropic model.
+        - token (str, optional): The API key for Anthropic.
     """
-    api_key = token or os.environ.get("OPENAI_API_KEY")
+    api_key = token or os.environ.get("ANTHROPIC_API_KEY")
     if not api_key:
-        raise ValueError("OPENAI_API_KEY environment variable is not set.")
+        raise ValueError("ANTHROPIC_API_KEY environment variable is not set.")
 
     pipeline = get_pipeline(name)
     inputs, outputs, preprocess, postprocess = get_interface_args(pipeline)
