@@ -1,5 +1,5 @@
 import os
-from anthropic import Anthropic
+import anthropic
 import gradio as gr
 from typing import Callable
 
@@ -9,17 +9,18 @@ __version__ = "0.0.1"
 def get_fn(model_name: str, preprocess: Callable, postprocess: Callable, api_key: str):
     def fn(message, history):
         inputs = preprocess(message, history)
-        client = Anthropic(api_key=api_key)
+        client = anthropic.Anthropic(api_key=api_key)
         with client.messages.stream(
             model=model_name,
-            messages=inputs["messages"],
             max_tokens=1000,
+            messages=inputs["messages"]
         ) as stream:
             response_text = ""
             for chunk in stream:
-                delta = chunk.delta.text or ""
-                response_text += delta
-                yield postprocess(response_text)
+                if chunk.type == "content_block_delta":
+                    delta = chunk.delta.text
+                    response_text += delta
+                    yield postprocess(response_text)
 
     return fn
 
@@ -32,9 +33,9 @@ def get_interface_args(pipeline):
         def preprocess(message, history):
             messages = []
             for user_msg, assistant_msg in history:
-                messages.append({"role": "user", "content": user_msg})
-                messages.append({"role": "assistant", "content": assistant_msg})
-            messages.append({"role": "user", "content": message})
+                messages.append({"role": "user", "content": [{"type": "text", "text": user_msg}]})
+                messages.append({"role": "assistant", "content": [{"type": "text", "text": assistant_msg}]})
+            messages.append({"role": "user", "content": [{"type": "text", "text": message}]})
             return {"messages": messages}
 
         postprocess = lambda x: x  # No post-processing needed
