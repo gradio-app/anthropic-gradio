@@ -78,13 +78,7 @@ The `anthropic-gradio` Python library has two dependencies: `anthropic` and `gra
 
 # Supported Models in Anthropic
 
-| Model | Context Length | Output Length | Dtype / Precision |
-|-------|----------------|---------------|-------|
-| claude-3-opus-20240229 | 200,000 | Varies | - |
-| claude-3-sonnet-20240229 | 200,000 | Varies | - |
-| claude-3-haiku-20240307 | 200,000 | Varies | - |
-| claude-2.1 | 200,000 | Varies | - |
-| claude-2.0 | 100,000 | Varies | - |
+All chat API models supported by Anthropic are compatible with this integration. For a comprehensive list of available models and their specifications, please refer to the [Anthropic Models documentation](https://docs.anthropic.com/en/docs/about-claude/models).
 
 -------
 
