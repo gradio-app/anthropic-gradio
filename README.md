@@ -55,6 +55,8 @@ gr.load(
 ).launch()
 ```
 
+![CustomizedInterface](custom_chat_anthropic.png)
+
 # Composition
 
 Or use your loaded Interface within larger Gradio Web UIs, e.g.
